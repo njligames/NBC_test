@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+ 
+<component name="RowListItem" extends="Group">
+ 
+<interface> 
+  <field id="itemContent" type="node" onChange="itemContentChanged"/> 
+</interface>
+ 
+<script type="text/brightscript" >
+<![CDATA[ 
+  function itemContentChanged() as void
+    itemData = m.top.itemContent
+    m.itemImage.uri = itemData.posterUrl
+  end function
+    
+  function init() as void
+    m.itemImage = m.top.findNode("itemImage") 
+  end function
+]]>
+</script>
+
+<children>
+    <LayoutGroup layoutDirection="vert" vertAlignment="top" itemSpacings="10" translation="[0,0]" >
+        <Poster id="itemImage" loadDisplayMode="limitSize" loadWidth="120" translation="[0,0]" loadHeight="90" height="90" />
+    </LayoutGroup>
+</children>
+
+</component>

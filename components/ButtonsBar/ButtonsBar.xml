@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ButtonsBar" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+    <script type="text/brightscript" uri="ButtonsBar.brs" />
+    <script type="text/brightscript" uri="pkg:/source/sdk/Commands.brs" />
+
+    <interface>
+        <field id="state" type="string" />
+        <field id="position" type="integer" />
+        <field id="duration" type="integer" value="0" />
+        <field id="seek" type="integer" alwaysNotify="true" />
+        <field id="currentSeek" type="integer" alwaysNotify="true" />
+        <field id="control" type="string" alwaysNotify="true" />
+        <field id="isSeeking" type="boolean" />
+        <field id="playbackType" type="string" />
+        <field id="toggleSessionInfo" type="boolean" value="false" />
+        <field id="toggleSessionConfig" type="boolean" value="false" />
+        <field id="inAdBreak" type="boolean" value="false" />
+    </interface>
+
+    <children>
+        <Rectangle
+            id="bg"
+            color="0x00000033"
+            width="1280"
+            height="60"
+            translation="[0,660]" />
+        <LayoutGroup id="commandButtons" layoutDirection="horiz" itemSpacings="[15]" translation="[575, 670]">
+            <Poster 
+                id="rewind" 
+                uri="pkg:/images/player/rewind_unselected.png" 
+            />
+            <Poster 
+                id="resume" 
+                uri="pkg:/images/player/resume_unselected.png" 
+            />
+            <Poster 
+                id="fastforward" 
+                uri="pkg:/images/player/fastforward_unselected.png" 
+            />
+            <Poster 
+                id="sessionInfo" 
+                uri="pkg:/images/player/sessionInfo_unselected.png" 
+            />
+            <Poster 
+                id="sessionConfig" 
+                uri="pkg:/images/player/sessionConfig_unselected.png" 
+            />
+            <Poster 
+                id="play" 
+                uri="pkg:/images/player/play_unselected.png" 
+                visible="false"
+            />
+        </LayoutGroup>
+    </children>
+</component>

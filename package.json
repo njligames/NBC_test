@@ -1,0 +1,45 @@
+{
+    "license": "ISC",
+    "version": "1.7.0",
+    "repository": {
+        "url": "git+https://github.com/sky-uk/core-video-sdk-roku_challenge.git",
+        "type": "git"
+    },
+    "author": "Core Video",
+    "name": "core-video-sdk-roku_challenge",
+    "devDependencies": {
+        "@rokucommunity/bslint": "^0.1.0",
+        "bestzip": "^2.1.7",
+        "brighterscript": "^0.37.4",
+        "del": "^2.2.0",
+        "dotenv": "^8.0.0",
+        "event-stream": "^3.3.4",
+        "fs-extra": "^7.0.1",
+        "glob": "^7.1.4",
+        "gulp": "^4.0.2",
+        "gulp-cli": "^2.0.1",
+        "gulp-exec": "^2.1.2",
+        "gulp-load-plugins": "^0.9.0",
+        "gulp-rename": "^1.2.2",
+        "gulp-replace": "^0.6.1",
+        "gulp-shell": "^0.5.2",
+        "gulp-zip": "^3.2.0",
+        "merge-stream": "^1.0.1",
+        "replace-in-file": "^6.1.0",
+        "request": "^2.81.0",
+        "requiredir": "^1.0.7",
+        "rooibos": "twig2let/rooibos.git#v4.0.0-custom-socket",
+        "rooibos-cli": "^1.4.0",
+        "shelljs": "^0.7.7",
+        "sync-request": "^6.0.0",
+        "yargs": "^7.0.2"
+    },
+    "dependencies": {},
+    "scripts": {
+        "lint": "bsc"
+    },
+    "keywords": [],
+    "main": "source/SkySDK.brs",
+    "homepage": "",
+    "description": "Core Video SDK Roku Challenge"
+}

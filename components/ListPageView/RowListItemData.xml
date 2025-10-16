@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+
+<component name="RowListItemData" extends="ContentNode">
+
+    <interface>
+        <field id="labelText" type="string" />
+        <field id="posterUrl" value="https://img.pixers.pics/pho_wat(s3:700/FO/43/85/44/36/700_FO43854436_7f64bdba2647c7222560ffa9903f0615.jpg,700,525,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,480,475,jpg)/autocolantes-movie-clapper-board-and-film-reel.jpg.jpg" type="string" />
+    </interface>
+
+</component>

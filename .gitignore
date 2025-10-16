@@ -1,0 +1,14 @@
+__pycache__/
+.env
+.python-version
+.roku-deploy-staging/**
+*.orig
+build
+CHANGELOG.md
+components/tests/rooibos/TestScene.brs
+logs/**
+node_modules/**
+out
+package-lock.json
+source/tests/rooibos/rooibosFunctionMap.brs
+

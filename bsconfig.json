@@ -1,0 +1,39 @@
+// list of diagnostic codes https://github.com/rokucommunity/brighterscript/blob/master/src/DiagnosticMessages.ts
+{
+    "files": [
+        "manifest",
+        "source/**/*",
+        "components/**/*",
+        "images/**/*"
+    ],
+    "plugins": [
+        "@rokucommunity/bslint"
+    ],
+    "createPackage": false,
+    "copyToStaging": false,
+    "retainStagingFolder": false,
+    "diagnosticFilters": [
+        "source/main_tests.brs",
+        "components/tests/rooibos/TestScene_tests.brs",
+        {
+            "src": "**/{RALETrackerTask,TestScene}.xml", // two files that don't validate well with the parser (rooibos, inline brightscript)
+            "codes": [
+                1000,
+                1001,
+                1002,
+                1004,
+                1003,
+                1067
+            ]
+        },
+        {
+            "src": "**/*",
+            "codes": [
+                "LINT1001",
+                "LINT3008",
+                1104,
+                1001 // missing script imports
+            ]
+        }
+    ]
+}

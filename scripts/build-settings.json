@@ -1,0 +1,84 @@
+{
+    "dependencies": [
+        "bs-promises",
+        "roku-common_adbmobile-lib",
+        "roku-common_comscore-lib",
+        "roku-common_conviva-lib",
+        "roku-common_yospace-lib",
+        "roku-common_type-utils"
+    ],
+    "testDependencies": [
+        "rooibos"
+    ],
+    "sources": [
+        {
+            "paths": [
+                "./source/**/*",
+                "./components/**/*",
+                "./manifest",
+                "./images/**/*",
+                "!./source/main_tests.brs",
+                "!./source/referenceApp/**/*",
+                "!./components/referenceApp/**/*",
+                "!./source/tests/**/*",
+                "!./components/tests/**/*"
+            ],
+            "destination": "./build",
+            "options": {
+                "base": "./"
+            }
+        }
+    ],
+    "referenceApp": [
+        {
+            "paths": [
+                "./source/referenceApp/source/**/*",
+                "./components/referenceApp/**/*",
+                "./ADBMobileConfig.json",
+                "!./source/referenceApp/source/tests/{,/**}"
+            ],
+            "destination": "./build",
+            "options": {
+                "base": "./"
+            }
+        }
+    ],
+    "autoTest": [
+        {
+            "paths": [
+                "./source/referenceApp/source/**/*",
+                "./components/referenceApp/**/*",
+                "./ADBMobileConfig.json",
+                "!./source/referenceApp/source/tests/Library{,/**}"
+            ],
+            "destination": "./build",
+            "options": {
+                "base": "./"
+            }
+        }
+    ],
+    "unitTestsFiles": [
+        {
+            "paths": [
+                "./source/**/*",
+                "./components/**/*",
+                "./manifest",
+                "./images/**/*",
+                "!./source/main.brs",
+                "!./source/main_tests.brs"
+            ],
+            "destination": "./build",
+            "options": {
+                "base": "./"
+            }
+        }
+    ],
+    "unitTests": {
+        "dir": "source/tests",
+        "sources": "**/*"
+    },
+    "automation": {
+        "dir": "source/automation",
+        "sources": "/tests/**/*"
+    }
+}
