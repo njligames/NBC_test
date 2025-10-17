@@ -11,4 +11,6 @@ node_modules/**
 out
 package-lock.json
 source/tests/rooibos/rooibosFunctionMap.brs
+.DS_Store
+.vscode/
 
