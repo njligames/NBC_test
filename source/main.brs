@@ -49,7 +49,7 @@ function _removeOldPage()
     m.currentPage.destroy()
 end function
 
-function _addNewPage(newPage, data = invalid as Object)
+function _addNewPage(newPage, data = invalid as object)
     m.currentPage = newPage
     m.currentPage.load(data)
     m.scene.appendChild(m.currentPage.view)

@@ -1,4 +1,3 @@
-' https://ottverse.com/free-hls-m3u8-test-urls/
 function Assets() as object
     _assets = [
         {

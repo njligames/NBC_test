@@ -1,8 +1,8 @@
-function SkySDKWait(timeout as Integer) as Dynamic
+function SkySDKWait(timeout as integer) as dynamic
     return skySDK()._wait(timeout)
 end function
 
-function skySDK() as Object
+function skySDK() as object
 
     globalAA = getGLobalAA()
     if globalAA.SkySDKInstance <> invalid then return globalAA.SkySDKInstance
@@ -16,19 +16,19 @@ function skySDK() as Object
         '|              Public Methods                  |
         '|----------------------------------------------|
 
-        getPlayerController: function() as Object
+        getPlayerController: function() as object
             return SkySDK_Player_PlayerController()
         end function
 
-        onMessage: function(callBack as String, callbackOwner as Object) as Void
+        onMessage: function(callBack as string, callbackOwner as object) as void
             m.messageObservable.registerObserver(callBack, callbackOwner)
         end function
 
-        removeEventListeners: function(callBackOwner as Object) as Void
+        removeEventListeners: function(callBackOwner as object) as void
             m.messageObservable.unRegisterObservers(callBackOwner)
         end function
 
-        setMessagePort: function(port as Object) as Void
+        setMessagePort: function(port as object) as void
             m.port = port
         end function
 
@@ -36,20 +36,20 @@ function skySDK() as Object
         '|       Private Methods                        |
         '|----------------------------------------------|
 
-        _processMessage: function(msg as Dynamic) as Void
+        _processMessage: function(msg as dynamic) as void
             if msg = invalid then return
-            _event = {field: msg.getField(), data: msg.getData()}
+            _event = { field: msg.getField(), data: msg.getData() }
             m.messageObservable.notifyObservers(_event)
         end function
 
-        _wait: function(timeout as Integer) as Object
+        _wait: function(timeout as integer) as object
             if timeout < 0 then timeout = 0
             while true
                 waitMessage = wait(timeout, m.port)
                 m._processMessage(waitMessage)
                 return waitMessage
             end while
-            return invalid 
+            return invalid
         end function
     }
 
