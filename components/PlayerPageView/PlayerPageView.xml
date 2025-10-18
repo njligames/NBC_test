@@ -5,6 +5,7 @@
     <interface>
         <function name="processMessage" />
         <field id="setControl" type="string" alwaysNotify="true" />
+        <field id="backPressed" type="bool" />
     </interface>
 
     <children>

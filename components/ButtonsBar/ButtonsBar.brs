@@ -1,8 +1,9 @@
-function Init() as Void
+function Init() as void
     m.commandButtons = m.top.findNode("commandButtons")
     m.top.observeField("state", "onCurrentPlayStateChanged")
     m.top.observeField("position", "onCurrentPositionChanged")
-
+    m.top.observeField("control", "onCurrentControlChanged")
+    m.top.observeField("currentSeek", "onCurrentSeekChanged")
     m.top.observeField("duration", "onDurationChanged")
     m.selectedIndex = 1
     m.currentSeekMultiplierDirection = 0
@@ -12,17 +13,17 @@ function Init() as Void
     m.seekSizeOffset = 1
 end function
 
-function onDurationChanged(event) as Void
+function onDurationChanged(event) as void
     if m.seekSize = 0
         m.seekSize = m.top.duration
     end if
 end function
 
-function onKeyEvent(key as String, press as Boolean) as Boolean
+function onKeyEvent(key as string, press as boolean) as boolean
     if press = true
         return false
     end if
-    if NOT m.top.inAdBreak
+    if not m.top.inAdBreak
         if key = Commands().left
             handleLeft()
         else if key = Commands().right
@@ -37,7 +38,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     return false
 end function
 
-function redrawButtons(oldSelectedIndex) as Void
+function redrawButtons(oldSelectedIndex) as void
     if oldSelectedIndex = m.selectedIndex
         return
     end if
@@ -48,8 +49,8 @@ function redrawButtons(oldSelectedIndex) as Void
     commandButton.uri = updateButtonURI(commandButton.id, m.selectedIndex)
 end function
 
-function updateButtonURI(command, index) as String
-    if command = Commands().resume AND LCase(m.top.state) = "playing"
+function updateButtonURI(command, index) as string
+    if command = Commands().resume and LCase(m.top.state) = "playing"
         command = Commands().pause
     end if
     selectedStr = "selected"
@@ -59,7 +60,7 @@ function updateButtonURI(command, index) as String
     return Substitute("pkg:/images/player/{0}_{1}.png", command, selectedStr)
 end function
 
-function setSelectedIndex(command) as Void
+function setSelectedIndex(command) as void
     for i = 0 to m.commandButtons.getChildCount() - 1
         commandButton = m.commandButtons.getChild(i)
         if commandButton.id = command
@@ -69,7 +70,7 @@ function setSelectedIndex(command) as Void
     end for
 end function
 
-function startTimer() as Void
+function startTimer() as void
     if m.timerTick <> invalid
         return
     end if
@@ -82,7 +83,7 @@ function startTimer() as Void
     m.timerTick.control = "start"
 end function
 
-function handleResume() as Void
+function handleResume() as void
     if m.top.isSeeking
         stopTimer()
         m.top.seek = m.top.currentSeek
@@ -93,7 +94,37 @@ function handleResume() as Void
     redrawButtons(oldSelectedIndex)
 end function
 
-function stopTimer() as Void
+function handleFastForward() as void
+    if m.top.isSeeking
+        handleResume()
+    else
+        m.top.control = Commands().pause
+
+        startTimer()
+
+        oldSelectedIndex = m.selectedIndex
+        setSelectedIndex(Commands().fastforward)
+        setControl()
+        redrawButtons(oldSelectedIndex)
+    end if
+end function
+
+function handleRewind() as void
+    if m.top.isSeeking
+        handleResume()
+    else
+        m.top.control = Commands().pause
+
+        startTimer()
+
+        oldSelectedIndex = m.selectedIndex
+        setSelectedIndex(Commands().rewind)
+        setControl()
+        redrawButtons(oldSelectedIndex)
+    end if
+end function
+
+function stopTimer() as void
     if m.timerTick = invalid
         return
     end if
@@ -104,22 +135,26 @@ function stopTimer() as Void
     m.timerTick = invalid
 end function
 
-function handleOK(key) as Void
+function handleOK(key) as void
     commandButton = m.commandButtons.getChild(m.selectedIndex)
     if commandButton.id = Commands().resume
         handleResume()
     else if commandButton.id = Commands().play
         goToLive()
+    else if commandButton.id = Commands().fastforward
+        handleFastForward()
+    else if commandButton.id = Commands().rewind
+        handleRewind()
     else if LCase(commandButton.id) = LCase("sessionConfig")
-        m.top.toggleSessionConfig = NOT m.top.toggleSessionConfig
+        m.top.toggleSessionConfig = not m.top.toggleSessionConfig
     else
-        m.top.toggleSessionInfo = NOT m.top.toggleSessionInfo
+        m.top.toggleSessionInfo = not m.top.toggleSessionInfo
     end if
     commandButton.uri = updateButtonURI(commandButton.id, m.selectedIndex)
 end function
 
-function goToLive() as Void
-    if NOT m.Islive
+function goToLive() as void
+    if not m.Islive
         return
     end if
 
@@ -128,7 +163,7 @@ function goToLive() as Void
     m.top.seek = m.top.duration
 end function
 
-function handleLeft() as Void
+function handleLeft() as void
     if m.selectedIndex < 1
         return
     end if
@@ -137,12 +172,12 @@ function handleLeft() as Void
     redrawButtons(oldSelectedIndex)
 end function
 
-function handleRight() as Void
+function handleRight() as void
     if m.selectedIndex >= (m.commandButtons.getChildCount() - 1)
         return
     end if
     nextButton = m.commandButtons.getChild(m.selectedIndex + 1)
-    if nextButton.id = "play" AND NOT nextButton.visible
+    if nextButton.id = "play" and not nextButton.visible
         return
     end if
     oldSelectedIndex = m.selectedIndex
@@ -150,34 +185,63 @@ function handleRight() as Void
     redrawButtons(oldSelectedIndex)
 end function
 
-function setControl() as Void
+function setControl() as void
     control = m.commandButtons.getChild(m.selectedIndex).id
-    if control = Commands().resume AND LCase(m.top.state) = "playing"
+    if control = Commands().resume and LCase(m.top.state) = "playing"
         control = Commands().pause
     end if
     m.top.control = control
 end function
 
-function onCurrentPlayStateChanged(event) as Void
+function onCurrentPlayStateChanged(event) as void
     resume = m.top.findNode("resume")
     if LCase(m.top.state) = "playing"
         resume.uri = updateButtonURI(Commands().pause, 1)
         m.top.findNode("play").visible = false
         m.top.findNode("play").uri = updateButtonURI(Commands().play, -1)
         m.currentSeekMultiplierDirection = 0
+        m.seekSizeOffset = 1
     else if LCase(m.top.state) = "paused"
         resume.uri = updateButtonURI(Commands().resume, 1)
         m.top.findNode("play").visible = m.Islive
+    else if LCase(m.top.state) = "fastforward"
+        m.currentSeekMultiplierDirection = 1
+        m.seekSizeOffset = 10
+    else if LCase(m.top.state) = "rewind"
+        m.currentSeekMultiplierDirection = -1
+        m.seekSizeOffset = 10
     end if
 end function
 
-function onCurrentPositionChanged(event) as Void
+function onCurrentPositionChanged(event) as void
+    m.top.findNode("fastforward").uri = updateButtonURI(Commands().fastforward, -1)
+    m.top.findNode("rewind").uri = updateButtonURI(Commands().rewind, -1)
     m.top.currentSeek = m.top.position
     m.isSeeking = false
 end function
 
-function onTimerTick(event) as Void
-    if m.timerTick.control = "stop" OR m.top.isSeeking = false
+function onCurrentControlChanged(event) as void
+    data = event.getData()
+    if LCase(data) = Commands().pause
+        m.top.state = "paused"
+        print "PLAYER - set player to pause"
+    else if LCase(data) = Commands().resume
+        m.top.state = "playing"
+        print "PLAYER - set player to play"
+    else if LCase(data) = Commands().fastforward
+        m.top.state = "fastforward"
+    else if LCase(data) = Commands().rewind
+        m.top.state = "rewind"
+    end if
+end function
+
+function onCurrentSeekChanged(event) as void
+    data = event.getData()
+    print "PLAYER - current seek", data
+end function
+
+function onTimerTick(event) as void
+    if m.timerTick.control = "stop" or m.top.isSeeking = false
         stopTimer()
     end if
     nextSeek = m.top.currentSeek + (m.currentSeekMultiplierDirection * m.seekSizeOffset)
