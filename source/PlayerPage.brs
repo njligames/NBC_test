@@ -4,6 +4,7 @@ function PlayerPage() as object
         session: invalid
         playerController: invalid
         type: "PlayerPage"
+        logger: skySDK().logger
 
         '|----------------------------------------------|
         '|              Public Methods                  |
@@ -16,11 +17,18 @@ function PlayerPage() as object
 
         load: function(data = invalid as object) as void
             m._registerPlayerPageObservers()
+
+            m.loggingView = m.view.findNode("loggingView")
+            if m.logger.options.disableLoggingToScreen or m.logger.options.disableLogging
+                m.loggingView.visible = false
+            end if
+
             commonPlayer = m.view.findNode("commonPlayer")
             controls = m.view.findNode("buttonsBar")
             skySDK().onMessage("processMessage", m)
             controls.ObserveFieldScoped("control", skySDK().port)
             controls.ObserveFieldScoped("seek", skySDK().port)
+            controls.ObserveFieldScoped("toggleSessionConfig", skySDK().port)
 
             m.playerController = m._getPlayerController()
             m.playerController.onSessionCreated("_handleSessionCreated", m)
@@ -48,27 +56,26 @@ function PlayerPage() as object
         end function
 
         processMessage: function(_event)
-            if _event <> invalid
+            if invalid = _event
+                m.logger.error(SkySDK_UtilsStringUtils().substitute("{0} message = {1}", "PlayerPage.processMessage", SkySDK_UtilsStringUtils().toString(_event)))
+            else
                 if _event.field = "control"
-
                     if Commands().pause = _event.data
                         m.session.pause()
                     end if
-
                     if Commands().resume = _event.data
                         m.session.resume()
                     end if
-
                     if Commands().fastforward = _event.data
                     end if
-
                     if Commands().rewind = _event.data
                     end if
-
                 end if
-
                 if _event.field = "seek"
                     m.session.seek(_event.data)
+                end if
+                if _event.field = "toggleSessionConfig"
+                    m.loggingView.visible = _event.data
                 end if
             end if
         end function

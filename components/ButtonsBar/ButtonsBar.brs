@@ -224,10 +224,8 @@ function onCurrentControlChanged(event) as void
     data = event.getData()
     if LCase(data) = Commands().pause
         m.top.state = "paused"
-        print "PLAYER - set player to pause"
     else if LCase(data) = Commands().resume
         m.top.state = "playing"
-        print "PLAYER - set player to play"
     else if LCase(data) = Commands().fastforward
         m.top.state = "fastforward"
     else if LCase(data) = Commands().rewind
@@ -236,8 +234,6 @@ function onCurrentControlChanged(event) as void
 end function
 
 function onCurrentSeekChanged(event) as void
-    data = event.getData()
-    print "PLAYER - current seek", data
 end function
 
 function onTimerTick(event) as void

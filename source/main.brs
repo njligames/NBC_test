@@ -7,6 +7,14 @@ sub Main()
     screen.setMessagePort(m.port)
 
     skySDK().setMessagePort(m.port)
+    params = {
+        disableLogging: false
+        logLevel: LogLevel().TRACE
+        name: "Default"
+        disableLoggingToScreen: true
+    }
+    skySDK().initLogger(params)
+    m.logger = skySDK().logger
     print "SDK initialized with success..."
 
     m.scene = screen.CreateScene("MainScene")

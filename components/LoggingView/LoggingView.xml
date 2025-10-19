@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="LoggingView" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+    <script type="text/brightscript" uri="LoggingView.brs" />
+    <script type="text/brightscript" uri="./../../source/sdk/utils/Utils.brs" />
+
+    <interface>
+        <field id="message" type="string" />
+    </interface>
+
+    <children>
+        <Rectangle 
+            id = "bg" 
+            width="1280"
+            height = "660" 
+            color = "0x101010C0" >
+
+        <ScrollableText 
+          id = "scrollableText"
+          translation = "[ 20, 20 ]"
+          font = "font:TinySystemFont"
+          text = ""
+          horizAlign = "left" 
+          vertAlign = "top" />
+          </Rectangle>
+    </children>
+</component>
