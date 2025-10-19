@@ -11,6 +11,7 @@ function skySDK() as object
         port: invalid
         messageObservable: SkySDK_Utils_Observable()
         initialisePromise: invalid
+        logger: invalid
 
         '|----------------------------------------------|
         '|              Public Methods                  |
@@ -32,12 +33,19 @@ function skySDK() as object
             m.port = port
         end function
 
+        initLogger: function(params = {} as object) as void
+            m.logger = newLogger(params)
+        end function
+
         '|----------------------------------------------|
         '|       Private Methods                        |
         '|----------------------------------------------|
 
         _processMessage: function(msg as dynamic) as void
-            if msg = invalid then return
+            if msg = invalid
+                m.logger.error(SkySDK_UtilsStringUtils().substitute("{0} message = {1}", "SkySDK._processMessage", SkySDK_UtilsStringUtils().toString(msg)))
+                return
+            end if
             _event = { field: msg.getField(), data: msg.getData() }
             m.messageObservable.notifyObservers(_event)
         end function

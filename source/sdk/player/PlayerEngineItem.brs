@@ -3,6 +3,7 @@ function SkySDK_Player_PlayerEngineItem(sessionItem as object, commonPlayer as o
         sessionItem: sessionItem
         commonPlayer: commonPlayer
         video: invalid
+        logger: skySDK().logger
 
         OBSERVABLE_FIELDS: {
             State: "state"
@@ -17,35 +18,17 @@ function SkySDK_Player_PlayerEngineItem(sessionItem as object, commonPlayer as o
 
         processMessage: function(_event) as void
             if _event <> invalid
-                print "PlayerEngineItem.processMessage", _event.field, _event.data
+
                 if _event.field = "state"
-                    if LCase(_event.data) = "buffering"
-                        print "Buffering: ", m.sessionItem.metadata.assetTitle
-                    end if
-                    if LCase(_event.data) = "playing"
-                        print "Playing: ", m.sessionItem.metadata.assetTitle
-                    end if
+                    m.logger.trace(SkySDK_UtilsStringUtils().substitute("PlayerEngineItem.processMessage field={0} data={1} title={2}", _event.field, _event.data, m.sessionItem.metadata.assetTitle))
                     m.stateObservable.notifyObservers(_event.data)
                 end if
 
                 if _event.field = "seek"
                     m.seekObservable.notifyObservers(_event.data)
                 end if
-
-                if _event.field = "control"
-                    if LCase(_event.data) = "pause"
-                        print "Pause: ", m.sessionItem.metadata.assetTitle
-                    end if
-                    if LCase(_event.data) = "resume"
-                        print "Resume: ", m.sessionItem.metadata.assetTitle
-                    end if
-                    if LCase(_event.data) = "fastforward"
-                        print "Fast Forward: ", m.sessionItem.metadata.assetTitle
-                    end if
-                    if LCase(_event.data) = "rewind"
-                        print "Rewind: ", m.sessionItem.metadata.assetTitle
-                    end if
-                end if
+            else
+                m.logger.error(SkySDK_UtilsStringUtils().substitute("{0} message = {1}", "PlayerEngineItem.processMessage", SkySDK_UtilsStringUtils().toString(_event)))
             end if
         end function
 

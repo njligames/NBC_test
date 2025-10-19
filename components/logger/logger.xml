@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<component name="Utils_Logger" extends="Node">
+
+    <interface>
+        <function name="initialize" />
+        <function name="dispose" />
+
+        <function name="trace" />
+        <function name="debug" />
+        <function name="info" />
+        <function name="warn" />
+        <function name="error" />
+        <function name="fatal" />
+    </interface>
+
+    <script type="text/brightscript" uri="logger.brs" />
+    <script type="text/brightscript" uri="./../../source/sdk/utils/Utils.brs" />
+
+</component>

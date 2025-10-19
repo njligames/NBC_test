@@ -2,6 +2,7 @@
 <component name="ButtonsBar" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
     <script type="text/brightscript" uri="ButtonsBar.brs" />
     <script type="text/brightscript" uri="pkg:/source/sdk/Commands.brs" />
+    <script type="text/brightscript" uri="./../../source/sdk/utils/Utils.brs" />
 
     <interface>
         <field id="state" type="string" />

@@ -11,5 +11,6 @@
     <children>
         <CommonPlayer id="commonPlayer" color="#00000000" />
         <ButtonsBar id="buttonsBar" />
+        <LoggingView id="loggingView" />
     </children>
 </component>
