@@ -34,6 +34,10 @@ function onKeyEvent(key as string, press as boolean) as boolean
     end if
     if key = Commands().play
         handleResume()
+    else if key = Commands().fastforward
+        handleFastForward()
+    else if key = Commands().rewind
+        handleRewind()
     end if
     return false
 end function
@@ -201,6 +205,8 @@ function onCurrentPlayStateChanged(_) as void
         m.top.findNode("play").uri = updateButtonURI(Commands().play, -1)
         m.currentSeekMultiplierDirection = 0
         m.seekSizeOffset = 1
+        m.top.findNode("fastforward").uri = updateButtonURI(Commands().fastforward, -1)
+        m.top.findNode("rewind").uri = updateButtonURI(Commands().rewind, -1)
     else if LCase(m.top.state) = "paused"
         resume.uri = updateButtonURI(Commands().resume, 1)
         m.top.findNode("play").visible = m.Islive
@@ -214,8 +220,6 @@ function onCurrentPlayStateChanged(_) as void
 end function
 
 function onCurrentPositionChanged(_) as void
-    m.top.findNode("fastforward").uri = updateButtonURI(Commands().fastforward, -1)
-    m.top.findNode("rewind").uri = updateButtonURI(Commands().rewind, -1)
     m.top.currentSeek = m.top.position
     m.isSeeking = false
 end function

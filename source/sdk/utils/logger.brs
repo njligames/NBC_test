@@ -40,7 +40,6 @@ function newLogger(params = {} as object) as object
 
     this.options = options
 
-
     this.getOptions = function() as object
         return m.options
     end function
@@ -95,6 +94,25 @@ function newLogger(params = {} as object) as object
     return this
 end function
 
+function readConfigFile(filePath as string) as object
+    config = ParseJson(ReadAsciiFile(filePath))
+    if invalid = config
+        config = {
+            disableLogging: "false"
+            logLevel: false
+            name: "Default"
+            disableLoggingToScreen: false
+        }
+    end if
+    return {
+        "loggerOptions": {
+            disableLogging: SkySDK_UtilsStringUtils().stringToBoolean(config?.disableLogging)
+            logLevel: config?.logLevel
+            name: config?.name
+            disableLoggingToScreen: false
+        }
+    }
+end function
 
 function createLoggerOptionsFromParams(params = {} as object) as object
     loggerOptions = params?.loggerOptions
@@ -102,9 +120,9 @@ function createLoggerOptionsFromParams(params = {} as object) as object
     if not SkySDK_UtilsTypeUtils().isObject(loggerOptions)
         loggerOptions = {}
 
-        logLevel = params?.logLevel
-        if SkySDK_UtilsTypeUtils().isInt(logLevel)
-            loggerOptions.logLevel = logLevel
+        _logLevel = params?.logLevel
+        if SkySDK_UtilsTypeUtils().isInt(_logLevel)
+            loggerOptions.logLevel = _logLevel
         end if
 
         disableLogging = params?.disableLogging
@@ -116,7 +134,33 @@ function createLoggerOptionsFromParams(params = {} as object) as object
         if SkySDK_UtilsTypeUtils().isBoolean(disableLoggingToScreen)
             loggerOptions.disableLoggingToScreen = disableLoggingToScreen
         end if
+    else
+        _logLevel = loggerOptions.logLevel
+        if SkySDK_UtilsTypeUtils().isInt(_logLevel)
+            if _logLevel < LogLevel().FATAL
+                _logLevel = LogLevel().FATAL
+            end if
+            if _logLevel > LogLevel().TRACE
+                _logLevel = LogLevel().TRACE
+            end if
+            loggerOptions.logLevel = _logLevel
+        else
+            loggerOptions.logLevel = LogLevel().TRACE
+        end if
 
+        disableLogging = loggerOptions.disableLogging
+        if SkySDK_UtilsTypeUtils().isBoolean(disableLogging)
+            loggerOptions.disableLogging = disableLogging
+        else
+            loggerOptions.disableLogging = true
+        end if
+
+        disableLoggingToScreen = loggerOptions.disableLoggingToScreen
+        if SkySDK_UtilsTypeUtils().isBoolean(disableLoggingToScreen)
+            loggerOptions.disableLoggingToScreen = disableLoggingToScreen
+        else
+            loggerOptions.disableLogging = false
+        end if
     end if
 
     return loggerOptions

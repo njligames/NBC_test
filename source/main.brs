@@ -8,13 +8,8 @@ sub Main()
     screen.setMessagePort(m.port)
 
     skySDK().setMessagePort(m.port)
-    params = {
-        disableLogging: false
-        logLevel: LogLevel().TRACE
-        name: "Default"
-        disableLoggingToScreen: false
-    }
-    skySDK().initLogger(params)
+    params = readConfigFile("pkg:/source/config/config.json")
+    skySDK().initLogger(createLoggerOptionsFromParams(params))
     m.logger = skySDK().logger
     print "SDK initialized with success..."
 

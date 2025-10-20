@@ -5,6 +5,7 @@ function SkySDK_Session_SessionController(sessionItem as object) as object
 
         stateObservable: SkySDK_Utils_Observable()
         seekObservable: SkySDK_Utils_Observable()
+        positionObservable: SkySDK_Utils_Observable()
 
         '|----------------------------------------------|
         '|              Public Methods                  |
@@ -16,6 +17,7 @@ function SkySDK_Session_SessionController(sessionItem as object) as object
             skySDK().onMessage("processMessage", m)
             m.currentPlayerItem.onStateChanged("_handlePlayerStateChange", m)
             m.currentPlayerItem.onSeekChanged("_handlePlayerSeekChange", m)
+            m.currentPlayerItem.onPositionChanged("_handlePlayerPositionChange", m)
         end function
 
         processMessage: function(msg) as void
@@ -42,6 +44,7 @@ function SkySDK_Session_SessionController(sessionItem as object) as object
             skySDK().removeEventListeners(m)
             m.stateObservable.unRegisterAllObserver()
             m.seekObservable.unRegisterAllObserver()
+            m.positionObservable.unRegisterAllObserver()
             m.currentPlayerItem.destroy()
         end function
 
@@ -57,6 +60,10 @@ function SkySDK_Session_SessionController(sessionItem as object) as object
             m.seekObservable.registerObserver(callback, callbackOwner)
         end function
 
+        onPositionChanged: function(callback as string, callbackOwner as object) as void
+            m.positionObservable.registerObserver(callback, callbackOwner)
+        end function
+
         '|----------------------------------------------|
         '|              Private Methods                 |
         '|----------------------------------------------|
@@ -65,8 +72,8 @@ function SkySDK_Session_SessionController(sessionItem as object) as object
             m.stateObservable.notifyObservers(state)
         end function
 
-        _setSeek: function(state as string) as void
-            m.seekObservable.notifyObservers(state)
+        _setSeek: function(seconds as integer) as void
+            m.seekObservable.notifyObservers(seconds)
         end function
 
         _handlePlayerStateChange: function(state as string) as void
@@ -76,6 +83,11 @@ function SkySDK_Session_SessionController(sessionItem as object) as object
         _handlePlayerSeekChange: function(seconds as integer) as void
             m.seekObservable.notifyObservers(seconds)
         end function
+
+        _handlePlayerPositionChange: function(seconds as integer) as void
+            m.positionObservable.notifyObservers(seconds)
+        end function
+
     }
     return this
 end function
