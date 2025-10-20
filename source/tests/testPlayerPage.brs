@@ -12,12 +12,12 @@ sub testPlayerPage_load()
 
     _testData = {
         asset: {
-            manifest: "testUrl",
-            transport: "testTransport"
+            manifest: "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8",
+            transport: "Hls"
         },
         metadata: {
-            assetTitle: "Test Asset",
-            text: "Test Asset",
+            assetTitle: "Apple Stream",
+            text: "Apple Stream",
             categories: ["NoDRM"]
         }
     }

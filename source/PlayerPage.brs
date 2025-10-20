@@ -19,7 +19,7 @@ function PlayerPage() as object
             m._registerPlayerPageObservers()
 
             m.loggingView = m.view.findNode("loggingView")
-            if m.logger.options.disableLoggingToScreen or m.logger.options.disableLogging
+            if invalid <> m.logger and (m.logger.options.disableLoggingToScreen or m.logger.options.disableLogging)
                 m.loggingView.visible = false
             end if
 
@@ -29,6 +29,7 @@ function PlayerPage() as object
             controls.ObserveFieldScoped("control", skySDK().port)
             controls.ObserveFieldScoped("seek", skySDK().port)
             controls.ObserveFieldScoped("toggleSessionConfig", skySDK().port)
+            controls.ObserveFieldScoped("toggleSessionInfo", skySDK().port)
 
             m.playerController = m._getPlayerController()
             m.playerController.onSessionCreated("_handleSessionCreated", m)
@@ -75,7 +76,19 @@ function PlayerPage() as object
                     m.session.seek(_event.data)
                 end if
                 if _event.field = "toggleSessionConfig"
-                    m.loggingView.visible = _event.data
+                    m.loggingView.visible = not _event.data
+                end if
+                if _event.field = "toggleSessionInfo"
+                    lines = [
+                        "",
+                        "*****************************************************************************************************************************************",
+                        "* Instructions:                                                                                                                          ",
+                        "* Toggle the pause/play button to pause and play the video.                                                                              ",
+                        "* Press the fast forward button to fast forward the playback. The video will pause while this happens. Press again to continue playing.  ",
+                        "* Press the rewind button to rewind the playback. The video will pause while this happens. Press again to continue playing.              "
+                        "*****************************************************************************************************************************************",
+                    ]
+                    m.logger.fatal(SkySDK_UtilsStringUtils().join(lines, Chr(10)))
                 end if
             end if
         end function

@@ -18,7 +18,11 @@
           id = "scrollableText"
           translation = "[ 20, 20 ]"
           font = "font:TinySystemFont"
-          text = ""
+          text = "Welcome! 
+          * On-screen logs are shown with the most recent entries at the top.
+          * Press the config button to enable or disable logging on the screen.
+          * Tap the info button to show control instructions in the on-screen logging area.
+          "
           horizAlign = "left" 
           vertAlign = "top" />
           </Rectangle>
