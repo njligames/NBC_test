@@ -2,14 +2,14 @@
 
 What is required?
 
-1. Add different artwork to assets in Assets.brs. [X]
-2. Extend the player API with **PAUSE** / **RESUME** / **FAST FORWARD**/ **REWIND** / **BACK** functionality. [X]
+1. Add different artwork to assets in Assets.brs. 
+2. Extend the player API with **PAUSE** / **RESUME** / **FAST FORWARD**/ **REWIND** / **BACK** functionality. 
    - **FAST FORWARD** / **REWIND** should add/subtract 10 seconds to the current position.
    - **BACK** should exit the player.
-3. Create a logger with configurable output: log to console by default, log to the screen via extension. [X]
+3. Create a logger with configurable output: log to console by default, log to the screen via extension. 
    - log video state changes.
    - log errors.
-4. Unit Test new functionality. [X]
+4. Unit Test new functionality. 
 
 How to get started.
 
