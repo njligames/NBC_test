@@ -72,22 +72,22 @@ function newLogger(params = {} as object) as object
         end function
 
     else
-        this.trace = function(message as dynamic) as void
+        this.trace = function(_ as dynamic) as void
         end function
 
-        this.debug = function(message as dynamic) as void
+        this.debug = function(_ as dynamic) as void
         end function
 
-        this.info = function(message as dynamic) as void
+        this.info = function(_ as dynamic) as void
         end function
 
-        this.warn = function(message as dynamic) as void
+        this.warn = function(_ as dynamic) as void
         end function
 
-        this.error = function(message as dynamic) as void
+        this.error = function(_ as dynamic) as void
         end function
 
-        this.fatal = function(message as dynamic) as void
+        this.fatal = function(_ as dynamic) as void
         end function
 
     end if

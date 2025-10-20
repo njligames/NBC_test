@@ -14,7 +14,7 @@ function processMessage(message) as void
     end if
 end function
 
-function onControl(event) as void
+function onControl(_) as void
     m.top.setField("setControl", m.buttonsBar.control)
 end function
 
@@ -37,6 +37,6 @@ function onCurrentPlaySeekChanged(seconds) as void
     m.buttonsBar.position = seconds
 end function
 
-function onCurrentFocusedChildChanged(focusedChild) as void
+function onCurrentFocusedChildChanged(_) as void
     m.buttonsBar.setFocus(true)
 end function

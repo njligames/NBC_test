@@ -13,7 +13,7 @@ function Init() as void
     m.seekSizeOffset = 1
 end function
 
-function onDurationChanged(event) as void
+function onDurationChanged(_) as void
     if m.seekSize = 0
         m.seekSize = m.top.duration
     end if
@@ -135,7 +135,7 @@ function stopTimer() as void
     m.timerTick = invalid
 end function
 
-function handleOK(key) as void
+function handleOK(_) as void
     commandButton = m.commandButtons.getChild(m.selectedIndex)
     if commandButton.id = Commands().resume
         handleResume()
@@ -193,7 +193,7 @@ function setControl() as void
     m.top.control = control
 end function
 
-function onCurrentPlayStateChanged(event) as void
+function onCurrentPlayStateChanged(_) as void
     resume = m.top.findNode("resume")
     if LCase(m.top.state) = "playing"
         resume.uri = updateButtonURI(Commands().pause, 1)
@@ -213,7 +213,7 @@ function onCurrentPlayStateChanged(event) as void
     end if
 end function
 
-function onCurrentPositionChanged(event) as void
+function onCurrentPositionChanged(_) as void
     m.top.findNode("fastforward").uri = updateButtonURI(Commands().fastforward, -1)
     m.top.findNode("rewind").uri = updateButtonURI(Commands().rewind, -1)
     m.top.currentSeek = m.top.position
@@ -233,10 +233,10 @@ function onCurrentControlChanged(event) as void
     end if
 end function
 
-function onCurrentSeekChanged(event) as void
+function onCurrentSeekChanged(_) as void
 end function
 
-function onTimerTick(event) as void
+function onTimerTick(_) as void
     if m.timerTick.control = "stop" or m.top.isSeeking = false
         stopTimer()
     end if

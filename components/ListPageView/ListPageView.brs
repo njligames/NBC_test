@@ -1,4 +1,4 @@
-function Init() as Void
+function Init() as void
     m.selectedLabel = m.top.findNode("selectedLabel")
     m.selectedLabelCategory = m.top.findNode("selectedLabelCategory")
     m.selectedText = m.top.findNode("selectedText")
@@ -32,12 +32,12 @@ function _initRowList()
     m.rowList.SetFocus(true)
 end function
 
-function onItemsChanged() as Void
+function onItemsChanged() as void
     _buildItemList()
     m.rowList.content = _getRowListContent()
 end function
 
-function _buildItemList() as Void
+function _buildItemList() as void
     for i = 0 to m.top.items.Count() - 1
         item = m.top.items[i]
         for j = 0 to item.metadata.categories.Count() - 1
@@ -51,7 +51,7 @@ function _buildItemList() as Void
     end for
 end function
 
-function _getRowListContent() as Object
+function _getRowListContent() as object
     data = CreateObject("roSGNode", "ContentNode")
     for i = 0 to m.categories.Count() - 1
         _createRowAssets(data, m.categories[i])
@@ -59,15 +59,15 @@ function _getRowListContent() as Object
     return data
 end function
 
-function _createRowAssets(data, category) as Void
+function _createRowAssets(data, category) as void
     row = data.CreateChild("ContentNode")
     row.title = category
-    for each item in m.itemList[category]
+    for each _ in m.itemList[category]
         row.CreateChild("RowListItemData")
     end for
 end function
 
-function onRowItemFocused() as Void
+function onRowItemFocused() as void
     row = m.rowList.rowItemFocused[0]
     col = m.rowList.rowItemFocused[1]
 
@@ -76,18 +76,18 @@ function onRowItemFocused() as Void
     selectedName = item.asset.key
     selectedText = ""
     if item.metadata <> invalid
-        if item.metadata.assetTitle <> invalid AND item.metadata.assetTitle <> ""
+        if item.metadata.assetTitle <> invalid and item.metadata.assetTitle <> ""
             selectedName = item.metadata.assetTitle
         end if
         selectedText = item.metadata.text
     end if
 
     m.selectedText.text = selectedText
-if selectedName <> invalid then m.selectedLabel.text = selectedName else m.selectedLabel.text = "N/A"
+    if selectedName <> invalid then m.selectedLabel.text = selectedName else m.selectedLabel.text = "N/A"
     m.selectedLabelCategory.text = m.categories[row]
 end function
 
-function handleButtonClick(event) as Void
+function handleButtonClick(_) as void
     row = m.rowList.rowItemSelected[0]
     col = m.rowList.rowItemSelected[1]
 
@@ -95,7 +95,7 @@ function handleButtonClick(event) as Void
     m.top.selectedAsset = item
 end function
 
-function _findAsset(row, col) as Object
+function _findAsset(row, col) as object
     for i = 0 to m.itemList[m.categories[row]].Count() - 1
         if col = i
             return m.itemList[m.categories[row]][i]
@@ -104,11 +104,11 @@ function _findAsset(row, col) as Object
     return invalid
 end function
 
-function onCurrentFocusedChildChanged(event) as Void
-    if m.focused = false AND m.top.hasFocus()
+function onCurrentFocusedChildChanged(_) as void
+    if m.focused = false and m.top.hasFocus()
         m.rowList.setFocus(true)
         m.focused = true
-    else if m.focused = true AND NOT m.top.hasFocus() AND NOT m.top.isInFocusChain()
+    else if m.focused = true and not m.top.hasFocus() and not m.top.isInFocusChain()
         m.focused = false
     end if
 end function
