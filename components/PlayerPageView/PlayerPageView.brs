@@ -12,6 +12,9 @@ function processMessage(message) as void
     if msg.field = "seek"
         onCurrentPlaySeekChanged(msg.data)
     end if
+    if msg.field = "position"
+        onCurrentPlayPositionChanged(msg.data)
+    end if
 end function
 
 function onControl(_) as void
@@ -34,6 +37,10 @@ function onCurrentPlayStateChanged(playState) as void
 end function
 
 function onCurrentPlaySeekChanged(seconds) as void
+    m.buttonsBar.position = seconds
+end function
+
+function onCurrentPlayPositionChanged(seconds) as void
     m.buttonsBar.position = seconds
 end function
 

@@ -239,3 +239,10 @@ sub testStringUtils_substitute()
     expectedStringValue = "0 true [<TEST STRING>,0,0,0,0,true,{obj:1}] {testObject:{obj:1},testBool:true,testArray:[<TEST STRING>,0,0,0,0,true,{obj:1}],testLongInteger:0,testFloat:0,testString:<TEST STRING>,testDouble:0,testInteger:0}"
     m.assertEqual(stringValue, expectedStringValue)
 end sub
+
+'@Test
+sub testStringUtils_stringToBoolean()
+    m.assertTrue(SkySDK_UtilsStringUtils().stringToBoolean("true"))
+    m.assertFalse(SkySDK_UtilsStringUtils().stringToBoolean("false"))
+    m.assertFalse(SkySDK_UtilsStringUtils().stringToBoolean(m.testString))
+end sub

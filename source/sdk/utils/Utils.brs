@@ -458,6 +458,16 @@ function SkySDK_UtilsStringUtils() as object
             return substitute(str, m.toString(a), m.toString(b), m.toString(c), m.toString(d))
         end function,
 
+        ' Convert string to boolean.
+        ' @param {String} str - the String to convert
+        ' @returns {Boolean} the boolean value of the String
+        stringToBoolean: function(str as string) as boolean
+            if "true" = LCase(str)
+                return true
+            end if
+            return false
+        end function,
+
     }
 end function
 

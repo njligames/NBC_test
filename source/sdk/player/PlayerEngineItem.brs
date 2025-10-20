@@ -6,11 +6,13 @@ function SkySDK_Player_PlayerEngineItem(sessionItem as object, commonPlayer as o
         logger: skySDK().logger
 
         OBSERVABLE_FIELDS: {
-            State: "state"
+            State: "state",
+            Position: "position"
         }
 
         stateObservable: SkySDK_Utils_Observable()
         seekObservable: SkySDK_Utils_Observable()
+        positionObservable: SkySDK_Utils_Observable()
 
         '|----------------------------------------------|
         '|       Main Tread message                     |
@@ -27,6 +29,10 @@ function SkySDK_Player_PlayerEngineItem(sessionItem as object, commonPlayer as o
                 if _event.field = "seek"
                     m.seekObservable.notifyObservers(_event.data)
                 end if
+
+                if _event.field = "position"
+                    m.positionObservable.notifyObservers(_event.data)
+                end if
             else
                 m.logger.error(SkySDK_UtilsStringUtils().substitute("{0} message = {1}", "PlayerEngineItem.processMessage", SkySDK_UtilsStringUtils().toString(_event)))
             end if
@@ -38,6 +44,10 @@ function SkySDK_Player_PlayerEngineItem(sessionItem as object, commonPlayer as o
 
         onSeekChanged: function(callBack, callbackOwner) as void
             m.seekObservable.registerObserver(callBack, callbackOwner)
+        end function
+
+        onPositionChanged: function(callBack, callbackOwner) as void
+            m.positionObservable.registerObserver(callBack, callbackOwner)
         end function
 
         '|----------------------------------------------|
@@ -73,8 +83,10 @@ function SkySDK_Player_PlayerEngineItem(sessionItem as object, commonPlayer as o
             m.stop()
             skySDK().removeEventListeners(m)
             m.video.unObserveFieldScoped(m.OBSERVABLE_FIELDS.State)
+            m.video.unObserveFieldScoped(m.OBSERVABLE_FIELDS.Position)
             m.stateObservable.unRegisterAllObserver()
             m.seekObservable.unRegisterAllObserver()
+            m.positionObservable.unRegisterAllObserver()
             m.commonPlayer.removeChild(m.video)
             m.video = invalid
         end function
@@ -104,6 +116,7 @@ function SkySDK_Player_PlayerEngineItem(sessionItem as object, commonPlayer as o
         _init: function() as void
             m.video = m._createVideoElement()
             m.video.observeFieldScoped(m.OBSERVABLE_FIELDS.State, skySDK().port)
+            m.video.observeFieldScoped(m.OBSERVABLE_FIELDS.Position, skySDK().port)
             m.commonPlayer.appendChild(m.video)
             m.play()
         end function

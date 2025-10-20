@@ -46,6 +46,7 @@ function PlayerPage() as object
         _registerSessionObservables: function()
             m.session.onStateChanged("_handleStateChanged", m)
             m.session.onSeekChanged("_handleSeekChanged", m)
+            m.session.onPositionChanged("_handlePositionChanged", m)
         end function
 
         _registerPlayerPageObservers: function()
@@ -121,6 +122,15 @@ function PlayerPage() as object
             }
             m.view.callFunc("processMessage", { payload: msg })
         end function
+
+        _handlePositionChanged: function(seconds) as void
+            msg = {
+                data: seconds
+                field: "position"
+            }
+            m.view.callFunc("processMessage", { payload: msg })
+        end function
+
     }
     this.init()
     return this
