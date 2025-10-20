@@ -1,4 +1,5 @@
 sub Main()
+
     screen = CreateObject("roSGScreen")
     m.port = CreateObject("roMessagePort")
 
@@ -11,7 +12,7 @@ sub Main()
         disableLogging: false
         logLevel: LogLevel().TRACE
         name: "Default"
-        disableLoggingToScreen: true
+        disableLoggingToScreen: false
     }
     skySDK().initLogger(params)
     m.logger = skySDK().logger
@@ -21,6 +22,7 @@ sub Main()
     screen.show()
     _addNewPage(ListPage())
     m.scene.observeField("backPressed", m.port)
+
     while true
         msg = SkySDKWait(0)
         if msg <> invalid

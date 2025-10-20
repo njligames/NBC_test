@@ -14,7 +14,7 @@
         <function name="fatal" />
     </interface>
 
-    <script type="text/brightscript" uri="logger.brs" />
+    <script type="text/brightscript" uri="./Utils_Logger.brs" />
     <script type="text/brightscript" uri="./../../source/sdk/utils/Utils.brs" />
 
 </component>
