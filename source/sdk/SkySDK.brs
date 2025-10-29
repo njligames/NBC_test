@@ -54,6 +54,7 @@ function skySDK() as object
             if timeout < 0 then timeout = 0
             while true
                 waitMessage = wait(timeout, m.port)
+                stop
                 m._processMessage(waitMessage)
                 return waitMessage
             end while
