@@ -275,14 +275,24 @@ function SkySDK_UtilsTypeUtils() as object
         isFunction: function(obj as dynamic) as boolean : return m.isType(obj, "ifFunction") : end function,
         isSgNodeSubtype: function(obj as dynamic, subType as dynamic) as boolean: return (m.isType(obj, "ifSGNodeDict") and m.isString(subType) and obj.isSubtype(subType)) : end function,
 
-        isComparable: function(obj as dynamic) as boolean
-            if obj = invalid then return true
-            if m.isString(obj) then return true
-            if m.isBool(obj) then return true
-            if m.isInt(obj) then return true
-            if m.isLongInt(obj) then return true
-            if m.isFloat(obj) then return true
-            if m.isDouble(obj) then return true
+        isComparable: function(obj1 as dynamic, obj2 = invalid as dynamic) as boolean
+            if invalid = obj2
+                if obj1 = invalid then return true
+                if m.isString(obj1) then return true
+                if m.isBool(obj1) then return true
+                if m.isInt(obj1) then return true
+                if m.isLongInt(obj1) then return true
+                if m.isFloat(obj1) then return true
+                if m.isDouble(obj1) then return true
+            else
+                if obj1 = invalid and obj2 = invalid then return true
+                if m.isString(obj1) and m.isString(obj2) then return true
+                if m.isBool(obj1) and m.isBool(obj2) then return true
+                if m.isInt(obj1) and m.isInt(obj2) then return true
+                if m.isLongInt(obj1) and m.isLongInt(obj2) then return true
+                if m.isFloat(obj1) and m.isFloat(obj2) then return true
+                if m.isDouble(obj1) and m.isDouble(obj2) then return true
+            end if
             return false
         end function,
 
@@ -308,6 +318,12 @@ end function
 
 function SkySDK_UtilsStringUtils() as object
     return {
+        NEW_LINE: chr(10),
+        SINGLE_QUOTE: chr(39),
+        DOUBLE_QUOTE: chr(34),
+        TAB: chr(9),
+        SPACE: chr(32),
+
         ' Joins an array of different elements to a single string. Calls toString on each
         ' element of the array so object types will be printed by default: "Lorem Ipsum roRegex"
         ' @param arr the array to join
@@ -468,6 +484,49 @@ function SkySDK_UtilsStringUtils() as object
             return false
         end function,
 
+        ' Checks if a string is empty:
+        ' @param {String} text - The string to check
+        ' @returns {Boolean} true if the string is "" or "
+        isEmpty: function(text as string) as boolean
+            return len(text.trim()) = 0
+        end function,
+
+        ' Converts anything to a string
+        ' @param {Dynamic} the value to convert to a string.
+        ' @returns {String} the converted string. Defaults to "NaS"
+        toStr: function(any as dynamic) as string
+            ret = m.toString(any)
+            if ret = invalid then ret = type(any)
+            if ret = invalid then ret = "NaS"
+            return ret
+        end function,
+
+        ' Invalid safe string comparison
+        ' @param {String} str1 the first string
+        ' @param {String} str2 the second string
+        ' @returns {Boolean} true if both params are the same
+        equals: function(str1 as dynamic, str2 as dynamic) as boolean
+            return m.toString(str1) = m.toString(str2)
+        end function
+
+        ' Converts a string to a roArray
+        ' @param {String} text - text to split
+        ' @param {String} [delim = space] - delimeter to use to split
+        ' @returns {roArray} an array from the string
+        split: function(text as string, delim = m.SPACE as string) as object
+            regex = createObject("roRegex", delim, "")
+            return regex.split(text)
+        end function,
+
+        replace: function(text as string, pattern as string, replacement as string) as string
+            roRegex = createObject("roRegex", pattern, "")
+            return roRegex.replace(text, replacement)
+        end function,
+
+        replaceAll: function(text as string, pattern as string, replacement as string) as string
+            roRegex = createObject("roRegex", pattern, "")
+            return roRegex.replaceAll(text, replacement)
+        end function,
     }
 end function
 
@@ -492,4 +551,296 @@ function initializeObject(objectName as string, params = {} as object) as dynami
     end if
 
     return result
+end function
+
+function SkySDK_UtilsObjectUtils() as object
+    return {
+        ' Compares each element of an array. Only works with native types
+        ' @param {Dynamic} arr1 - the first array to compare
+        ' @param {Dynamic} arr2 - the second array to compare
+        ' @returns {Boolean} One level deep equality
+        equals: function(arr1 as dynamic, arr2 as dynamic) as boolean
+
+            if invalid = arr1 and not SkySDK_UtilsTypeUtils().isString(arr1) and not SkySDK_UtilsTypeUtils().isInteger(arr1) and not SkySDK_UtilsTypeUtils().isLongInteger(arr1) and not SkySDK_UtilsTypeUtils().isFloat(arr1) and not SkySDK_UtilsTypeUtils().isDouble(arr1) and not SkySDK_UtilsTypeUtils().isBoolean(arr1) and not SkySDK_UtilsTypeUtils().isArray(arr1) and not SkySDK_UtilsTypeUtils().isObject(arr1) and not SkySDK_UtilsTypeUtils().isList(arr1)
+                return false
+            end if
+
+            if invalid = arr2 and not SkySDK_UtilsTypeUtils().isString(arr2) and not SkySDK_UtilsTypeUtils().isInteger(arr2) and not SkySDK_UtilsTypeUtils().isLongInteger(arr2) and not SkySDK_UtilsTypeUtils().isFloat(arr2) and not SkySDK_UtilsTypeUtils().isDouble(arr2) and not SkySDK_UtilsTypeUtils().isBoolean(arr2) and not SkySDK_UtilsTypeUtils().isArray(arr2) and not SkySDK_UtilsTypeUtils().isObject(arr2) and not SkySDK_UtilsTypeUtils().isList(arr2)
+                return false
+            end if
+
+            if invalid <> arr1 and invalid <> arr2 and not SkySDK_UtilsTypeUtils().isArray(arr1) and not SkySDK_UtilsTypeUtils().isObject(arr1) and not SkySDK_UtilsTypeUtils().isArray(arr2) and not SkySDK_UtilsTypeUtils().isObject(arr2)
+                if SkySDK_UtilsTypeUtils().isComparable(arr1, arr2)
+                    return arr1 = arr2
+                else
+                    return false
+                end if
+            end if
+
+            if not SkySDK_UtilsTypeUtils().isArray(arr1) and not SkySDK_UtilsTypeUtils().isObject(arr1)
+                return false
+            end if
+
+            if not SkySDK_UtilsTypeUtils().isArray(arr2) and not SkySDK_UtilsTypeUtils().isObject(arr2)
+                return false
+            end if
+
+            if arr1.count() <> arr2.count()
+                return false
+            end if
+
+            if SkySDK_UtilsTypeUtils().isObject(arr1) or SkySDK_UtilsTypeUtils().isObject(arr2)
+                if SkySDK_UtilsTypeUtils().isObject(arr1) and SkySDK_UtilsTypeUtils().isObject(arr2)
+                    for each item1 in arr1.items()
+                        val1 = item1.value
+                        val2 = arr2.LookupCI(item1.key)
+                        if SkySDK_UtilsTypeUtils().isArray(val1) or SkySDK_UtilsTypeUtils().isArray(val2)
+                            if SkySDK_UtilsTypeUtils().isArray(val1) and SkySDK_UtilsTypeUtils().isArray(val2)
+                                return SkySDK_UtilsObjectUtils().equals(val1, val2)
+                            else
+                                return false
+                            end if
+                        else if SkySDK_UtilsTypeUtils().isObject(val1) or SkySDK_UtilsTypeUtils().isObject(val2)
+                            if SkySDK_UtilsTypeUtils().isObject(val1) and SkySDK_UtilsTypeUtils().isObject(val2)
+                                return SkySDK_UtilsObjectUtils().equals(val1, val2)
+                            else
+                                return false
+                            end if
+                        else
+                            if val1 <> val2
+                                return false
+                            end if
+                        end if
+                    end for
+                else
+                    return false
+                end if
+            else
+                for i = 0 to arr1.count() - 1 step + 1
+                    if SkySDK_UtilsTypeUtils().isArray(arr1[i]) or SkySDK_UtilsTypeUtils().isArray(arr2[i])
+                        if SkySDK_UtilsTypeUtils().isArray(arr1[i]) and SkySDK_UtilsTypeUtils().isArray(arr2[i])
+                            return SkySDK_UtilsObjectUtils().equals(arr1[i], arr2[i])
+                        else
+                            return false
+                        end if
+                    else if SkySDK_UtilsTypeUtils().isObject(arr1[i]) or SkySDK_UtilsTypeUtils().isObject(arr2[i])
+                        if SkySDK_UtilsTypeUtils().isObject(arr1[i]) and SkySDK_UtilsTypeUtils().isObject(arr2[i])
+                            return SkySDK_UtilsObjectUtils().equals(arr1[i], arr2[i])
+                        else
+                            return false
+                        end if
+                    else
+                        if arr1[i] <> arr2[i]
+                            return false
+                        end if
+                    end if
+                end for
+            end if
+
+            return true
+        end function,
+
+
+        ' Is empty
+        ' @param {Dynamic} arr - the array to check
+        ' @returns {Boolean} array is empty or Invalid
+        isEmpty: function(arr as dynamic) as boolean
+            if arr = invalid
+                return true
+            end if
+
+            return arr.count() = 0
+        end function,
+
+        ' Checks if the element is in the array.
+        ' @param {Dynamic} arr - the array to check
+        ' @param {Dynamic} element - the element to search
+        ' @returns {Boolean} array contains the element
+        contains: function(arr as dynamic, element as dynamic) as boolean
+            return m.indexOf(arr, element) >= 0
+        end function,
+
+        ' Checks if the element is in the array and return its position in the array
+        ' @param {Dynamic} arr - the array to check
+        ' @param {Dynamic} element - the element to search
+        ' @returns {Integer} index where the element is located or -1 if not present or cant be searched
+        indexOf: function(arr as dynamic, element as dynamic) as integer
+            if SkySDK_UtilsTypeUtils().isArray(arr) = false
+                return -1
+            end if
+
+            if m.isEmpty(arr)
+                return -1
+            end if
+
+            if SkySDK_UtilsTypeUtils().isComparable(element) = false
+                return -1
+            end if
+
+            for i = 0 to arr.count() - 1 step + 1
+                if m.equals(arr[i], element)
+                    ' if arr[i] = element
+                    return i
+                end if
+            end for
+
+            return -1
+        end function,
+
+        ' Adds an element to an array in the given index
+        ' @param {Dynamic} arr - the array to modify
+        ' @param {Integer} index - where to insert the element
+        ' @param {Dynamic} element - the element to insert
+        ' @returns {Dynamic} array with or without the element
+        add: function(arr as dynamic, index as integer, element as dynamic) as dynamic
+            if SkySDK_UtilsTypeUtils().isArray(arr) = false
+                return invalid
+            end if
+
+            if index < 0
+                return arr
+            end if
+
+            if m.isEmpty(arr)
+                return [element]
+            end if
+
+            if index = arr.count()
+                arr.push(element)
+                return arr
+            end if
+
+            if index = 0
+                arr.unshift(element)
+                return arr
+            end if
+
+            if index > arr.count() + 1
+                return arr
+            end if
+
+            newArray = []
+            for i = 0 to arr.count() - 1 step + 1
+                if index = i
+                    newArray.push(element)
+                end if
+                newArray.push(arr[i])
+            end for
+
+            return newArray
+        end function
+
+        ' Replaces an element on an array in the given index
+        ' @param {Dynamic} arr - the array to modify
+        ' @param {Integer} index - where to replace the element
+        ' @param {Dynamic} element - the element to replace
+        ' @returns {Dynamic} array with or without the element
+        replace: function(arr as dynamic, index as integer, element as dynamic) as dynamic
+            if SkySDK_UtilsTypeUtils().isArray(arr) = false
+                return invalid
+            end if
+
+            if index < 0
+                return arr
+            end if
+
+            if m.isEmpty(arr)
+                return []
+            end if
+
+            if index > arr.count() - 1
+                return arr
+            end if
+
+            newArray = []
+            for i = 0 to arr.count() - 1 step + 1
+                if index = i
+                    newArray.push(element)
+                else
+                    newArray.push(arr[i])
+                end if
+            end for
+
+            return newArray
+        end function,
+
+        ' Returns a part of the array
+        ' @param {Dynamic} arr - the array to modify
+        ' @param {Integer} startIndex - where to start
+        ' @param {Integer} endIndex - where to end
+        ' @returns {Dynamic} array part of the original array
+        subArray: function(arr as dynamic, startIndex as integer, endIndex as integer) as dynamic
+            if m.isEmpty(arr)
+                return []
+            end if
+
+            if startIndex < 0
+                startIndex = 0
+            end if
+
+            if endIndex > arr.count() - 1
+                endIndex = arr.count() - 1
+            end if
+
+            if startIndex > endIndex
+                return invalid
+            end if
+
+            newArray = []
+            for i = startIndex to endIndex step + 1
+                newArray.push(arr[i])
+            end for
+
+            return newArray
+        end function,
+
+        ' Converts an array to String like "[1,2,3]"
+        ' @param {Dynamic} arr - the array to convert
+        ' @returns {String} arr converted to string
+        toString: function(arr as dynamic) as string
+            return SkySDK_UtilsStringUtils().toString(arr)
+        end function,
+
+        ' Applies the given filter function to each element of an array.
+        ' @param {roArray} arr - the array with the elements to filter
+        ' @param {Function} func - the filter function to apply. It has to have
+        ' the following signature: function(i, el) as Boolean
+        ' @returns {roArray} containing the elements filtered
+        filter: function(arr as object, func as function) as dynamic
+            if not SkySDK_UtilsTypeUtils().isArray(arr) then
+                return invalid
+            end if
+
+            result = []
+            for i = 0 to arr.count() - 1 step + 1
+                el = arr[i]
+
+                if func(i, el)
+                    result.push(el)
+                end if
+            end for
+            return result
+        end function
+
+
+        merge: function(arr1 as object, arr2 as object) as object
+            result = []
+
+            if SkySDK_UtilsTypeUtils().isArray(arr1)
+                result.append(arr1)
+
+                if SkySDK_UtilsTypeUtils().isArray(arr2)
+                    for i = 0 to (arr2.count() - 1)
+                        value = arr2[i]
+
+                        if not m.contains(result, value)
+                            result.push(value)
+                        end if
+                    end for
+                end if
+            end if
+
+            return result
+        end function
+    }
 end function
